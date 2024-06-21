@@ -1,3 +1,5 @@
+version: 2.1
+
 jobs:
   test:
     docker:
@@ -5,8 +7,17 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Install dependencies
+          command: npm install
+      - run:
           name: Run Jest with Coverage
           command: npm test
       - store_artifacts:
           path: coverage/lcov-report
           destination: coverage
+
+workflows:
+  version: 2
+  candidate_management_test:
+    jobs:
+      - test
