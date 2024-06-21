@@ -130,7 +130,7 @@ describe('Candidate API', () => {
 
         const response = await request(app).delete(`/candidates/${candidateId}`);
         expect(response.statusCode).toBe(200);
-        expect(response.body.message).toBe('candidate deleted successfully');
+        expect(response.body.message).toEqual('candidate deleted successfully');
     });
 
     test('should return 404 when reading a deleted candidate', async () => {
@@ -138,5 +138,29 @@ describe('Candidate API', () => {
 
         const response = await request(app).get(`/candidates/${candidateId}`);
         expect(response.statusCode).toBe(404);
+        expect(response.body.message).toEqual('Candidate not found');
+    });
+
+    it('should fail to create candidate if email already exists', async () => {
+        const existingEmail = 'existing.matembu@example.com';
+        const candidateData ={
+            "firstName": "Emmanuel", "lastName": "Matembu",
+            "email": existingEmail,  
+            "comment": "With 5years Experience in Software Engineering",
+            "github": "https://github.com/Emmanuel-Dominic", 
+            "linkedIn": "https://linkedin.com/in/matembu-emmanuel-dominic", 
+            "phoneNumber": "256-700-701-616", 
+            "timeInterval": "10 AM - 6 PM"
+        };
+
+        Candidate.findOne.mockResolvedValue({ id: 1 });
+        Candidate.create.mockResolvedValue(candidateData);
+
+        const response = await request(app)
+        .post('/candidates')
+        .send(candidateData);
+
+        expect(response.statusCode).toBe(400);
+        expect(response.body.message).toEqual('Email already in use');
     });
 });

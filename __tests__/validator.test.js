@@ -230,4 +230,68 @@ describe('validateCandidateData Middleware', () => {
     expect(next).toHaveBeenCalled();
   });
 
+  it('should fail validation if firstName is less 3 characters long', async () => {
+    req.body = {
+        firstName: 'Do',
+        lastName: 'Matembu',
+        email: 'dominic.matembu@example.com',
+        phoneNumber: '256-700-701-616',
+        timeInterval: '9 AM - 5 PM',
+        linkedIn: 'https://linkedin.com/in/matembu-emmanuel-dominic',
+        github: 'https://github.com/Emmanuel-Dominic',
+        comment: 'A Senior Software Engineer.'
+    };
+
+    await validateCandidateData(req, res, next);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({
+        errors: [
+            { field: 'firstName', message: 'First name must be at least 3 characters long.' }
+        ]
+    });
+  });
+
+  it('should fail validation if lastName is less 3 characters long', async () => {
+    req.body = {
+        firstName: 'Dominic',
+        lastName: 'Ma',
+        email: 'dominic.matembu@example.com',
+        phoneNumber: '256-700-701-616',
+        timeInterval: '9 AM - 5 PM',
+        linkedIn: 'https://linkedin.com/in/matembu-emmanuel-dominic',
+        github: 'https://github.com/Emmanuel-Dominic',
+        comment: 'A Senior Software Engineer.'
+    };
+
+    await validateCandidateData(req, res, next);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({
+        errors: [
+            { field: 'lastName', message: 'Last name must be at least 3 characters long.' }
+        ]
+    });
+  });
+
+  it('should fail validation if lastName is missing', async () => {
+    req.body = {
+        firstName: 'Dominic',
+        email: 'dominic.matembu@example.com',
+        phoneNumber: '256-700-701-616',
+        timeInterval: '9 AM - 5 PM',
+        linkedIn: 'https://linkedin.com/in/matembu-emmanuel-dominic',
+        github: 'https://github.com/Emmanuel-Dominic',
+        comment: 'A Senior Software Engineer.'
+    };
+
+    await validateCandidateData(req, res, next);
+
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({
+        errors: [
+            { field: 'lastName', message: 'Last name is required and must be a non-empty string.' }
+        ]
+    });
+  });
 });
