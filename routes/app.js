@@ -67,6 +67,21 @@ const routes = (app) => {
             res.status(400).json({ message: 'Failed to update candidate!', error: error.message });
         }
     });
+
+    app.delete('/candidates/:id', async (req, res) => {
+        try{
+            const deleted = await Candidate.destroy({
+                where: { id: req.params.id }
+            });
+            if (deleted) {
+                res.status(200).json({ message: "candidate deleted successfully" });
+            } else {
+                res.status(404).json({ message: 'Candidate not found' });
+            }
+        } catch (error) {
+            res.status(400).json({ message: 'Failed to delete candidate!', error: error.message });
+        }
+    });
 }
 
 export default routes;
