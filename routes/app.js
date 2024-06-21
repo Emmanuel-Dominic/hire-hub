@@ -27,6 +27,21 @@ const routes = (app) => {
             res.status(400).json({ message: 'Failed to retrieve candidate!', error: error.message });
         }
     });
+
+    app.post('/candidates', async (req, res) => {
+        const { email, ...candidateData } = req.body;
+        try {
+            const existingCandidate = await Candidate.findOne({ where: { email } });
+            if (existingCandidate) {
+                return res.status(400).json({ message: 'Email already in use' });
+            } else {
+                const created = await Candidate.create(candidateData);
+                res.status(201).json({ message: 'Candidate created successfully', candidate: created });
+            }
+        } catch (error) {
+            res.status(400).json({ message: 'Failed to create candidate!', error: error.message });
+        }
+    });
 }
 
 export default routes;
