@@ -43,6 +43,30 @@ const routes = (app) => {
             res.status(400).json({ message: 'Failed to create candidate!', error: error.message });
         }
     });
+    
+    app.put('/candidates/:id', validateCandidateData, async (req, res) => {
+        const candidateId = req.params.id;
+        const { email, ...candidateData } = req.body;
+
+        try {
+            const candidate = await Candidate.findByPk(candidateId);
+            if (!candidate) {
+                return res.status(404).json({ message: 'Candidate not found!' });
+            }
+
+            if (email) {
+                const existingCandidate = await Candidate.findOne({ where: { email } });
+                if (existingCandidate && existingCandidate.id !== parseInt(candidateId)) {
+                    return res.status(400).json({ message: 'Email already in use' });
+                }
+            }
+
+            await Candidate.update(candidateData, { where: { id: candidateId } });
+            res.status(200).json({ message: 'Candidate updated successfully', candidate });
+        } catch (error) {
+            res.status(400).json({ message: 'Failed to update candidate!', error: error.message });
+        }
+    });
 }
 
 export default routes;
