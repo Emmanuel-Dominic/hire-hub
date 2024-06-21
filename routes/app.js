@@ -1,4 +1,5 @@
 import { Candidate } from '../models';
+import validateCandidateData from '../helpers/validator';
 
 
 const routes = (app) => {
@@ -28,7 +29,7 @@ const routes = (app) => {
         }
     });
 
-    app.post('/candidates', async (req, res) => {
+    app.post('/candidates', validateCandidateData, async (req, res) => {
         const { email, ...candidateData } = req.body;
         try {
             const existingCandidate = await Candidate.findOne({ where: { email } });
