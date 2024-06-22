@@ -30,12 +30,13 @@ const routes = (app) => {
     });
 
     app.post('/candidates', validateCandidateData, async (req, res) => {
-        const { email, ...candidateData } = req.body;
+        const { firstName, lastName, email, phoneNumber, timeInterval, linkedIn, github, comment } = req.body;
         try {
             const existingCandidate = await Candidate.findOne({ where: { email } });
             if (existingCandidate) {
                 return res.status(400).json({ message: 'Email already in use' });
             } else {
+                const candidateData = { firstName, lastName, email, phoneNumber, timeInterval, linkedIn, github, comment }
                 const created = await Candidate.create(candidateData);
                 res.status(201).json({ message: 'Candidate created successfully', candidate: created });
             }
@@ -46,7 +47,7 @@ const routes = (app) => {
     
     app.put('/candidates/:id', validateCandidateData, async (req, res) => {
         const candidateId = req.params.id;
-        const { email, ...candidateData } = req.body;
+        const { firstName, lastName, email, phoneNumber, timeInterval, linkedIn, github, comment } = req.body;
 
         try {
             const candidate = await Candidate.findByPk(candidateId);
@@ -60,7 +61,7 @@ const routes = (app) => {
                     return res.status(400).json({ message: 'Email already in use' });
                 }
             }
-
+            const candidateData = { firstName, lastName, email, phoneNumber, timeInterval, linkedIn, github, comment }
             await Candidate.update(candidateData, { where: { id: candidateId } });
             res.status(200).json({ message: 'Candidate updated successfully', candidate });
         } catch (error) {
