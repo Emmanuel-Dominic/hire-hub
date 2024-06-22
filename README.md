@@ -3,16 +3,17 @@
 [![CircleCI](https://dl.circleci.com/status-badge/img/gh/Emmanuel-Dominic/hire-hub/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/Emmanuel-Dominic/hire-hub/tree/main) 
 
 
-For a dynamic SQL database connection of your choice, provide the environmental variables as indicated in the `.env.example` file.
-
 Time spent on this project:
 - `18 hours`
 
 To run the application, use:
+- `npx sequelize-cli db:migrate` to apply migrations to the database created based on edited configuration in the the config file in config folder.
 - `npm start`
 
 To run the application tests, use:
 - `npm test`
+
+![test](https://github.com/Emmanuel-Dominic/hire-hub/assets/50827537/6c5d0bab-f735-4eac-9c1b-45a46123af35)
 
 After successfully running the application, you can test the endpoints using Postman. The responses you receive will match those shown in the screenshots below.
 
